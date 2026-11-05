@@ -39,7 +39,7 @@ dsh plugin --profile desktop add "link:/绝对路径/dsh-feiyu-say"
 
 ## 配置
 
-配置存 `~/.dsh/feiyu-say-config.json`（首次运行会按默认值生成；也可以手动建）。
+配置走 DSH 原生设置：**设置 → 插件 → 插件配置 → dsh-feiyu-say**，改完即生效（重启插件）。也可以直接改 profile 的 `cordis.patch.yml` 里 `id: feiyu-say` 那一节的 `config`。
 
 | 键 | 默认 | 说明 |
 |---|---|---|
