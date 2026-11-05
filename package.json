@@ -1,0 +1,36 @@
+{
+  "name": "dsh-qq-voice",
+  "version": "0.2.0",
+  "description": "给 DSH 一个「发 QQ 语音条」的工具：本机 CosyVoice→RVC 换声→8kHz→NapCat；支持切声线、下载模型、每轮语音提示。",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "qq",
+    "voice",
+    "tts",
+    "onebot",
+    "napcat"
+  ],
+  "main": "lib/host.js",
+  "exports": {
+    ".": "./lib/host.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
