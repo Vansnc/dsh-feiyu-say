@@ -6,6 +6,17 @@
 
 把想说的话用本机 **CosyVoice**（可选 **RVC** 换声）合成成 WAV，可在设置页试听。**不绑定任何 IM**——怎么发出去（QQ / 微信 / 就放着）由当前会话的传输方式决定。
 
+> **⚠️ 平台支持：目前只有 macOS**
+>
+> 这个版本（0.3.x）的**一键部署只在 macOS 上实测跑通**。Windows 上会因为两个已知问题失败：
+>
+> 1. 部署脚本只找 `python3`（Windows 上是微软商店的 0 字节占位符），且报错文案写死了 `brew`；
+> 2. 配置里的路径清洗只认 `/` 开头，`C:\…` 会被清空。
+>
+> Windows 支持在分支 [`feat/windows-oneclick`](https://github.com/Vansnc/dsh-feiyu-say/tree/feat/windows-oneclick)（0.4.0）上开发中：自动下载托管 Python、ffmpeg 变可选、修路径清洗、Windows 上自动跳过装不了的 RVC。**该分支尚未合并，也未在 Windows 上跑完整条部署（装依赖 + 下模型 + 自检合成）**，请勿当作已完成支持。
+>
+> Linux 未测试，大概率可以参照 macOS 手动配置。
+
 ## 能力
 
 - `send_voice`：合成一句语音，返回文件路径 + 试听 URL；发 QQ 语音条时传 `sampleRate: 8000`。
@@ -39,7 +50,7 @@ ln -s /path/to/dsh-feiyu-say ~/.dsh/profiles/desktop/node_modules/dsh-feiyu-say
 
 ## 前置
 
-- macOS（优先）/ Windows / Linux
+- **macOS（当前唯一实测支持的平台）**；Windows / Linux 见顶部说明
 - Python 3.9+、git、ffmpeg、≥ 12GB 磁盘
 - 能访问 PyPI / ModelScope / GitHub（一键部署要装包、下模型）
 
