@@ -86,8 +86,10 @@ def main():
     ap.add_argument("--repo", default="", help="CosyVoice 仓库根目录，插到 sys.path 最前")
     args = ap.parse_args()
 
-    if args.repo and args.repo not in sys.path:
-        sys.path.insert(0, args.repo)
+    if args.repo:
+        for p in (os.path.join(args.repo, 'third_party', 'Matcha-TTS'), args.repo):
+            if p not in sys.path:
+                sys.path.insert(0, p)
     os.environ.setdefault("PYTHONDONTWRITEBYTECODE", "1")
 
     import torch

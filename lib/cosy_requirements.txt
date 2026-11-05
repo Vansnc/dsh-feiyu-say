@@ -1,0 +1,25 @@
+# dsh-feiyu-say 一键部署用的 CosyVoice 核心依赖（精简版）。
+# 只装 `import cosyvoice` + CosyVoice2-0.5B 推理需要的，去掉 webui/训练/其它模型的包
+# （gradio / fastapi / deepspeed / diffusers / lightning / tensorrt / vllm / whisper 等）。
+# 不钉死版本，避免旧 pin 在新 Python/镜像上解析失败。
+
+torch
+torchaudio
+transformers
+numpy
+soundfile
+librosa
+conformer
+hydra-core
+omegaconf
+HyperPyYAML
+wetext
+tqdm
+modelscope
+scipy
+einops
+x-transformers
+onnxruntime
+protobuf
+pydantic
+inflect
