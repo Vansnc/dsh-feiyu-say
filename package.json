@@ -1,7 +1,7 @@
 {
   "name": "dsh-feiyu-say",
   "version": "0.2.0",
-  "description": "给 DSH 一个「发 QQ 语音条」的工具：本机 CosyVoice→RVC 换声→8kHz→NapCat；支持切声线、下载模型、每轮语音提示。",
+  "description": "给 DSH 一个「合成语音」的工具：本机 CosyVoice→RVC 换声→8kHz→输出 WAV；支持切声线、下载模型、每轮语音提示。",
   "license": "MIT",
   "type": "module",
   "engines": {
