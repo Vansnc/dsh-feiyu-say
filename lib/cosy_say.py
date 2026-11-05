@@ -55,6 +55,7 @@ def _call_inference(cosyvoice, args):
     if args.mode == "zero_shot":
         if not args.prompt_wav:
             raise ValueError("zero_shot 需要 --prompt-wav")
+        # 这个版本的 inference_zero_shot 收的是 wav 路径（内部自己 load_wav），不是张量
         return _with_speed(lambda speed=None: cosyvoice.inference_zero_shot(
             args.text, args.prompt_text or "", args.prompt_wav,
             **({"stream": False} if speed is None else {"stream": False, "speed": speed})
