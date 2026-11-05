@@ -24,10 +24,13 @@ test('clamp旋钮：超时越界回落 240000', () => {
   assert.equal(config.clamp旋钮({ timeoutMs: 30000 }).timeoutMs, 30000)
 })
 
-test('clamp旋钮：布尔化 enabled/hintEnabled', () => {
-  const r = config.clamp旋钮({ enabled: 1, hintEnabled: 0 })
-  assert.equal(r.enabled, true)
-  assert.equal(r.hintEnabled, false)
+test('clamp旋钮：enabled 布尔化 + hintMode 三档（兼容旧 hintEnabled）', () => {
+  assert.equal(config.clamp旋钮({ enabled: 1 }).enabled, true)
+  assert.equal(config.clamp旋钮({ hintEnabled: 0 }).hintMode, 'off')
+  assert.equal(config.clamp旋钮({ hintEnabled: 1 }).hintMode, 'auto')
+  const r = config.clamp旋钮({ hintMode: 'always' })
+  assert.equal(r.hintMode, 'always')
+  assert.equal(r.hintEnabled, undefined) // 旧字段已被删除
 })
 
 test('声线列表：原声恒在 + 自动发现 + 缺模型标记', () => {
