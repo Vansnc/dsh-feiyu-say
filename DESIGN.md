@@ -11,7 +11,7 @@
 **你要改的是一个已安装、正在运行的 DSH 插件**，源码目录：
 
 ```
-/Users/lingzifan/Documents/deepseek-harness/default-workspace/plugins/dsh-feiyu-say
+plugins/dsh-feiyu-say
 ```
 
 它通过 `link:` 装进 `~/.dsh/profiles/desktop`，改完代码**重启 DSH** 才生效（宿主模块不会热替换）。
