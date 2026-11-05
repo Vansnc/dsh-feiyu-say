@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RVC 换声（dsh-qq-voice 用）。
+"""RVC 换声（dsh-feiyu-say 用）。
 
 在 rvc 目录（cwd）里跑，把一段音频换成指定模型的嗓子。
 参数：src out model_path index_path index_rate protect

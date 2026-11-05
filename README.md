@@ -1,4 +1,4 @@
-# dsh-qq-voice
+# dsh-feiyu-say
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「发 QQ 语音条」的工具。
 
@@ -19,9 +19,9 @@
 ## 安装
 
 ```sh
-dsh plugin --profile desktop add "link:/绝对路径/dsh-qq-voice"
+dsh plugin --profile desktop add "link:/绝对路径/dsh-feiyu-say"
 # 或发布到 npm / GitHub 后：
-# dsh plugin --profile desktop add dsh-qq-voice
+# dsh plugin --profile desktop add dsh-feiyu-say
 ```
 
 装完重启 DSH。`link:` 装的是源码目录，改代码后重启即生效。
@@ -39,7 +39,7 @@ dsh plugin --profile desktop add "link:/绝对路径/dsh-qq-voice"
 
 ## 配置
 
-配置存 `~/.dsh/qq-voice-config.json`（首次运行会按默认值生成；也可以手动建）。
+配置存 `~/.dsh/feiyu-say-config.json`（首次运行会按默认值生成；也可以手动建）。
 
 | 键 | 默认 | 说明 |
 |---|---|---|
