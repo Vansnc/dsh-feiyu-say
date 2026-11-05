@@ -1,6 +1,6 @@
 {
   "name": "dsh-feiyu-say",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "本机 CosyVoice + RVC 合成语音，输出 WAV 并可在线试听；支持声线切换与一键部署。",
   "license": "MIT",
   "type": "module",

@@ -65,6 +65,8 @@ def main():
     rvc = RVCInference(device="cpu")
     rvc.load_model(model, version="v2", index_path=index or None)
     rvc.set_params(index_rate=float(index_rate), protect=float(protect))
+    # harvest 在 CPU 上极慢（实测 160s/句），rmvpe 快 20 倍（6.8s）且音准更好
+    rvc.f0method = "rmvpe"
     infer_file(rvc, src, out)
 
 
