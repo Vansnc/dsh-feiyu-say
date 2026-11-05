@@ -87,4 +87,24 @@ test('自检：0.3.x 老环境（没记 python）不该被新键拖红', async (
   assert.match(项.详情, /旧版部署/)
 })
 
+test('合成：RVC 被跳过时，换声报清楚的话而不是「命令不存在」', async () => {
+  const { 合成 } = await import(pathToFileURL(join(副本, 'lib', 'pipeline.mjs')).href)
+  const 根 = join(家, 'rvcmsg')
+  mkdirSync(join(根, 'models'), { recursive: true })
+  writeFileSync(join(根, 'models', 'x.pth'), 'x')
+  const 结果 = await 合成({
+    cosy脚本: join(副本, 'lib', 'cosy_say.py'),
+    cosy模型目录: 根,
+    cosyPython: join(副本, 'lib', 'python.exe'),
+    rvcPython: '',
+    模型目录: join(根, 'models'),
+    ffmpeg: 'ffmpeg',
+    音频目录: join(根, 'audio'),
+    cosy模式: 'zero_shot',
+  }, '测试一句', { id: 'x', model: 'x.pth' }, 24000, 60000)
+  assert.equal(结果.ok, false)
+  assert.match(结果.说, /还没装 RVC/, '实际提示：' + 结果.说)
+  assert.match(结果.说, /原声/)
+})
+
 test('清理', () => { try { rmSync(家, { recursive: true, force: true }) } catch {} })
