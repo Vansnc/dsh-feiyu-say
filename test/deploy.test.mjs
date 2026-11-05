@@ -3,7 +3,7 @@
 // 「模块里用了没 import 的东西」「阶段顺序写错」这类 node --check 抓不到的错。
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
+import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -74,6 +74,17 @@ test('部署编排：写盘配置的 Windows 路径不会被 clamp 清空', asyn
   assert.ok(配置.部署目录.length > 0, '部署目录被清空了')
   assert.ok(配置.cosy模型目录.length > 0, 'cosy模型目录被清空了')
   assert.ok(配置.cosy脚本.endsWith('cosy_say.py'))
+})
+
+test('自检：0.3.x 老环境（没记 python）不该被新键拖红', async () => {
+  const 假venv = join(家, 'legacy', 'cosy-venv', 'Scripts', 'python.exe')
+  mkdirSync(dirname(假venv), { recursive: true })
+  writeFileSync(假venv, 'x')
+  const 结果 = await deploy.自检({ python: '', cosyPython: 假venv, 安装RVC: 'off' })
+  const 项 = 结果.项.find((x) => x.名 === 'python')
+  assert.ok(项, '自检里应该有 python 项')
+  assert.equal(项.ok, true, '旧版环境不该因此报红：' + 项.详情)
+  assert.match(项.详情, /旧版部署/)
 })
 
 test('清理', () => { try { rmSync(家, { recursive: true, force: true }) } catch {} })
