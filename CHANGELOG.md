@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0（2026-11-06）
+
+真·一键：不需要预装 Python，也不需要 ffmpeg。macOS 上的行为保持不变（有 ffmpeg 就走 ffmpeg、有系统 Python 就用系统 Python）。
+
+### 一键部署
+
+- 新增「准备 Python」阶段（9 阶段）：系统里找 Python 3.9+（Windows 会试 `py -3.10` / `py -3` / 常见目录 / 注册表，并跳过微软商店的占位符），找不到就下载 `uv` 再拉 `python-build-standalone` 的 CPython 3.10，全部落在 `<部署目录>` 内，**不写系统 PATH、不写注册表、不碰用户 Python**。
+- 修 `python -m venv` 在托管运行时上「建出没有 pip 的 venv」的问题（ensurepip 缺轮子）：自动检测并用 `uv pip install --python <venv> pip` 补齐。
+- **ffmpeg 变成可选**：缺失时用新加的 `lib/resample.py`（scipy + soundfile）做重采样，输出仍是单声道 16bit WAV；有 ffmpeg 时行为与以前完全一致。
+- Windows 上先装 **CPU 版 torch**（`download.pytorch.org/whl/cpu`），省 2GB+ 并避开 CUDA 依赖问题。
+- **RVC 可在 Windows 上跳过**（新增 `安装RVC`：`auto` / `on` / `off`）。没有 MSVC 生成工具时 `fairseq` 必然编译失败，`auto` 会跳过去只出「原声」，别让整条部署挂在最后一公里。
+- 报错文案按平台给（Windows 给 `winget`，macOS 给 `brew`），不再一律提示 `brew install python`。
+
+### 配置
+
+- 新增 `python`（系统 Python 解释器，留空自动探测）与 `安装RVC` 两个键，设置页「高级 → Python / 环境」可见。
+- 部署完成后把实际使用的解释器写进 `python`，自检可以逐项验。
+
+### 修 Bug
+
+- **Windows 上所有路径类配置被清空**：`净路径()` 只认 `/` 开头，`C:\…` 一律被判成非法并被清成空串（配置读写都会踩，导致部署跑完路径全空）。改用 `path.isAbsolute` + 盘符判定，跨平台。
+- 自检不再把「ffmpeg 未安装」「RVC 跳过」判成失败，避免误报不健康。
+
 ## 0.3.0（2026-11-05）
 
 首版按生产要求重做，全部实测跑通（Torch 2.3.1 + CosyVoice2-0.5B zero-shot + RVC zyyv2）。

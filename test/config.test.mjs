@@ -69,4 +69,36 @@ test('音频路径：拦截 .. 与非 wav 与超长名', () => {
   assert.equal(audio.音频路径(音频目录, '/feiyu-say/audio/' + 'a'.repeat(100) + '.wav'), null)
 })
 
+test('路径清洗：绝对路径保留（Windows 盘符也算），相对路径清空', () => {
+  const 根 = process.platform === 'win32' ? 'C:\\tmp\\feiyu' : '/tmp/feiyu'
+  const 配置路径 = join(临时, 'feiyu-say-config.json')
+  writeFileSync(配置路径, JSON.stringify({
+    部署目录: 根,
+    python: join(根, 'python.exe'),
+    cosyPython: join(根, 'cosy-venv', process.platform === 'win32' ? 'Scripts\\python.exe' : 'bin/python'),
+    ffmpeg: 'ffmpeg',
+  }))
+  const c = config.读JSON()
+  // 以前只认 `/` 开头，Windows 上这些全被清成空串
+  assert.equal(c.部署目录, 根)
+  assert.equal(c.python, join(根, 'python.exe'))
+  assert.ok(c.cosyPython.endsWith('python.exe') || c.cosyPython.endsWith('python'))
+  assert.equal(c.ffmpeg, 'ffmpeg') // 纯命令名允许
+
+  writeFileSync(配置路径, JSON.stringify({ 部署目录: 'feiyu-say', cosyPython: '../x/python' }))
+  const d = config.读JSON()
+  assert.equal(d.部署目录, '')
+  assert.equal(d.cosyPython, '')
+})
+
+test('新增键：python 默认空、安装RVC 三档且非法值回落 auto', () => {
+  const 默认 = config.JSON默认值()
+  assert.equal(默认.python, '')
+  assert.equal(默认.安装RVC, 'auto')
+  writeFileSync(join(临时, 'feiyu-say-config.json'), JSON.stringify({ 安装RVC: '乱填' }))
+  assert.equal(config.读JSON().安装RVC, 'auto')
+  writeFileSync(join(临时, 'feiyu-say-config.json'), JSON.stringify({ 安装RVC: 'off' }))
+  assert.equal(config.读JSON().安装RVC, 'off')
+})
+
 test('清理', () => { try { rmSync(临时, { recursive: true, force: true }) } catch {} })
