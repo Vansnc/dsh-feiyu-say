@@ -1,12 +1,15 @@
 # dsh-feiyu-say 一键部署用的 CosyVoice 核心依赖（精简版）。
 # 只装 `import cosyvoice` + CosyVoice2-0.5B 推理需要的，去掉 webui / 训练 / CUDA 的包
-# （gradio / fastapi / uvicorn / deepspeed / tensorrt / gdown / wget / grpcio / matplotlib / tensorboard）。
-# 不钉死版本，避免旧 pin 在新 Python/镜像上解析失败。
+# （gradio / fastapi / uvicorn / deepspeed / tensorrt / grpcio）。
+#
+# ⚠️ torch / torchaudio / transformers / numpy 必须钉死在 CosyVoice 官方验证过的版本：
+#    新版 torch（2.6+ 实测 2.8）会让 CosyVoice2 合成出**乱码音频**（能出声但不是人话）。
+#    这是实测踩过的坑，别随意升。
 
-torch
-torchaudio
-transformers
-numpy
+torch==2.3.1
+torchaudio==2.3.1
+transformers==4.51.3
+numpy==1.26.4
 soundfile
 librosa
 conformer
