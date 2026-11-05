@@ -1,5 +1,7 @@
 # dsh-feiyu-say
 
+[![npm](https://img.shields.io/npm/v/dsh-feiyu-say)](https://www.npmjs.com/package/dsh-feiyu-say)
+
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「**本机合成语音**」的插件。
 
 把想说的话用本机 **CosyVoice**（可选 **RVC** 换声）合成成 WAV，可在设置页试听。**不绑定任何 IM**——怎么发出去（QQ / 微信 / 就放着）由当前会话的传输方式决定。
@@ -15,9 +17,19 @@
 
 ## 安装
 
-在 DSH **插件管理**里 `install_bundle`（target 传包目录 / 包名 / tarball），装完**重启 DSH**。
+**npm（推荐）**：插件管理里输入包名，装完**重启 DSH**。
 
-本地开发用 `link:` 挂源码目录：
+```
+dsh-feiyu-say
+```
+
+**从 GitHub 源码**（不想走 npm 时）：
+
+```
+github:Vansnc/dsh-feiyu-say
+```
+
+**本地开发**用 `link:` 挂源码目录：
 
 ```sh
 ln -s /path/to/dsh-feiyu-say ~/.dsh/profiles/desktop/node_modules/dsh-feiyu-say
