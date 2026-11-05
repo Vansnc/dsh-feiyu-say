@@ -1,97 +1,75 @@
 # dsh-feiyu-say
 
-给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「合成语音」的工具。
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「**本机合成语音**」的插件。
 
-一句话：**把想说的话，用本机声线合成成 WAV 音频文件**。合成链路是
-`文本 → CosyVoice 合成 →（可选）RVC 换声 → ffmpeg 8kHz → 输出 WAV`，
-全程本机，不把文字/音频交给云端 TTS，也**不绑定任何 IM**（QQ/微信/飞书都不接）。
+一句话：把想说的话用本机 **CosyVoice + RVC** 合成成 WAV 文件，可在设置页试听，**不绑定任何 IM**——怎么发出去（QQ / 微信 / 就放着）由当前会话的传输方式决定。
 
-## 功能
+## 能力
 
-- **`send_voice` 工具**：模型想「用声音说」时自己调，合成一句语音、落盘成 WAV 并返回路径。
-- **声线切换**：`voice_list` / `voice_switch` 列出并切换声线。模型目录里的每个 `.pth`
-  会自动被发现成一条可切声线；也可以配「原声」（不换声）。
-- **下载模型**：`voice_download` 从 URL 拉 `.pth` / `.index` 到模型目录并注册成声线。
-- **每轮语音提示**：可开关。开着时往会话系统提示词里塞一句，提醒模型「想用声音就说」；
-  关掉就完全不注入（不多花 token）。
-- **状态自检**：`voice_status` 看总开关、当前声线、各依赖路径是不是就绪。
-
-> 音频怎么「发出去」由会话自己的传输方式决定：插件只负责合成 + 给出文件路径。
-> 想发 QQ，用你自己的 QQ 桥（例如把返回的 WAV 交给 NapCat 的语音消息）即可，插件不管这块。
+- `send_voice`：合成一句语音，返回文件路径 + 试听 URL；发 QQ 语音条时传 `sampleRate: 8000`。
+- `voice_list` / `voice_switch` / `voice_download`：列、切、下载声线（RVC 模型）。
+- `voice_status`：逐项自检依赖；`test: true` 额外真合成一句。
+- 试听：设置页输入一句、点「试听」，`<audio>` 直接播放。
+- 一键部署：自动建 venv、装 CosyVoice/RVC、下模型、配好路径、自检合成。
+- 每轮语音提示：可开关，提醒模型「想用声音就说」。
 
 ## 安装
 
-```sh
-dsh plugin --profile desktop add "link:/绝对路径/dsh-feiyu-say"
-# 或：
-# dsh plugin --profile desktop add github:Vansnc/dsh-feiyu-say
-```
+在 DSH **插件管理**里安装本包（`plugin_manager install_bundle`，target 传包目录/包名），装完重启 DSH。
 
-装完重启 DSH。`link:` 装的是源码目录，改代码后重启即生效。
+本地开发用 `link:` 挂源码目录。
 
-## 前置（本机要有，插件不打包这些）
+> 本机没有 `dsh` 命令行，README 不把 `dsh plugin add` 写成唯一方式。
 
-1. **CosyVoice 合成脚本**：一个接受 `--text --style --ref --ref-text --speed --out` 的命令行脚本
-   （本仓库作者用的是 macOS 版 `feiyu_speak_mac.py`）。
-2. **RVC 运行环境**：一个装了 `rvc_python` 的 venv + RVC 包目录（`rvc目录`）。
-3. **ffmpeg**（降到 8kHz 用）。
-4. **RVC 模型**（`.pth` / 可选 `.index`），放在「模型目录」里。
+## 前置
+
+- macOS（优先）/ Windows / Linux（尽力兼容）
+- Python 3.9+、git、ffmpeg、≥ 12GB 磁盘
+- 能访问 PyPI / ModelScope / GitHub（一键部署要下模型）
+
+## 一键部署
+
+设置页点「一键部署环境」：会克隆并安装第三方 Python 包（CosyVoice、rvc-python），下载约 3–6GB，耗时几十分钟到几小时。任一步失败都会**停在那一阶段并写明原因**，不会假装成功；可以重跑，已完成阶段会跳过。
+
+**默认不下发第三方声线模型**（授权风险）。首装只保证「原声」可用；要换声，在设置页「导入声线」导自己的 `.pth`（本地路径或 URL，可选 `.index`）。
 
 ## 配置
 
-配置在 DSH **设置 → feiyu-say** 里直接改（底层存 `~/.dsh/feiyu-say-config.json`）；也可以手动编辑那个 JSON 文件。
+- **5 项旋钮进插件 Config**（`dsh --dump-config` 可见）：`enabled`、`sampleRate`、`hintEnabled`、`hintText`、`timeoutMs`。
+- 其余字段存 `~/.dsh/feiyu-say-config.json`（`DSH_HOME` 优先）：CosyVoice/RVC 路径、模型目录、声线列表、部署源等。
 
 | 键 | 默认 | 说明 |
 |---|---|---|
-| `总开关` | `true` | 关掉 = 不挂工具、不合成语音 |
-| `cosyPython` | 空 | CosyVoice 的 python |
-| `cosy脚本` | 空 | 合成脚本绝对路径 |
-| `cosy风格` | `cute` | `cute` / `gentle` |
-| `cosy参考音频` | 空 | 参考音频绝对路径 |
-| `cosy参考文字` | 空 | 参考音频对应的文字 |
-| `cosy语速` | `1.0` | 语速 |
-| `rvcPython` | 空 | RVC 的 python |
-| `rvc目录` | 空 | RVC 包目录（`rvc_infer.py` 以它为 cwd 跑） |
-| `ffmpeg` | `ffmpeg` | ffmpeg 命令 |
-| `模型目录` | 空 | RVC 模型所在目录（自动发现 `.pth`） |
-| `音频目录` | `/tmp/feiyu-say` | 合成出的 WAV 存到哪 |
-| `当前声线` | `原声` | 当前用的声线 id |
-| `声线` | `[]` | 显式声线列表：`[{id,name,model,index,indexRate,protect,noRvc}]` |
-| `语音提示` | `false` | 每轮语音提示开关 |
-| `语音提示文案` | （见代码默认） | 提示写什么 |
-| `超时毫秒` | `240000` | 单个合成阶段的最长等待 |
+| `sampleRate` | `24000` | 输出采样率；QQ 语音条用 `8000` |
+| `音频目录` | 系统临时目录 `feiyu-say/` | 合成出的 WAV 存哪 |
+| `音频保留数` | `200` | 最多保留几条，超出按时间删旧的 |
+| `cosy模式` | `sft` | `sft`=原声 / `zero_shot`=克隆参考音频 / `custom`=老的自定义脚本 |
+| `rvc模型地址` | 空 | GitHub Release 下载根地址（空 = 不自动下 RVC） |
 
-### 声线写法
+## 采样率
 
-```json
-{
-  "模型目录": "/path/to/rvc-models",
-  "当前声线": "zyyv2",
-  "声线": [
-    { "id": "原声", "name": "原声（不换声）", "noRvc": true },
-    { "id": "zyyv2", "name": "ZYYV2", "model": "zyyv2.pth", "index": "zyyv2.index", "indexRate": 0.75, "protect": 0.33 }
-  ]
-}
-```
-
-`模型目录` 里新丢进去的 `.pth` 不用写进 `声线`，`voice_list` 会自动看到它。
+默认 **24000Hz 单声道**。QQ 语音条只能吃 8kHz，24k 会被客户端转坏——所以发 QQ 时传 `sampleRate: 8000`；网页/本地听用默认。
 
 ## 工具
 
 | 工具 | 作用 |
 |---|---|
-| `send_voice(text, noRvc?)` | 合成一句语音，返回 WAV 文件路径 |
-| `voice_list` | 列声线 |
+| `send_voice(text, sampleRate?, noRvc?)` | 合成一句，返回路径 + 试听 URL |
+| `voice_list` | 列声线（标缺模型、带 index） |
 | `voice_switch(id)` | 切声线 |
-| `voice_download(name, modelUrl, indexUrl?)` | 下载模型并注册 |
-| `voice_status` | 状态/依赖自检 |
+| `voice_download(name, modelUrl, indexUrl?)` | 下载并注册声线 |
+| `voice_status(test?)` | 依赖自检；`test:true` 真合成 |
 
-## 说明
+## 排错
 
-- 一条语音通常 30–60 秒（RVC 换声慢）；「原声」会快一些。
-- 输出统一降到 8kHz 单声道（语音条的标准规格，24k 直发容易被转坏）。
-- 音频文件落在「音频目录」，路径由工具返回，之后怎么投递由你/会话决定。
+- 先点设置页「运行自检」，逐项看哪项红。
+- 部署日志：`~/.dsh/feiyu-say/deploy.log`。
+- 常见：`import cosyvoice` 失败（缺 Xcode CLT / 依赖没装全）、模型缺失（去导入）、ffmpeg 不在 PATH（`brew install ffmpeg`）。
 
-## License
+## License / 第三方
 
-MIT
+MIT。合成依赖 CosyVoice、RVC 与声线模型，其授权归属各自作者；本插件**不捆绑**任何第三方声线模型。
+
+## 变更
+
+见 [CHANGELOG.md](CHANGELOG.md)。

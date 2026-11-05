@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Feiyu Voice",
+    "description": "Local CosyVoice + RVC speech synthesis that writes WAV files and previews them in Settings."
+  }
+}

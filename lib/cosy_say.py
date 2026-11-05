@@ -83,10 +83,11 @@ def main():
     ap.add_argument("--prompt-wav", default="")
     ap.add_argument("--prompt-text", default="")
     ap.add_argument("--speed", type=float, default=1.0)
+    ap.add_argument("--repo", default="", help="CosyVoice 仓库根目录，插到 sys.path 最前")
     args = ap.parse_args()
 
-    os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    if args.repo and args.repo not in sys.path:
+        sys.path.insert(0, args.repo)
     os.environ.setdefault("PYTHONDONTWRITEBYTECODE", "1")
 
     import torch
