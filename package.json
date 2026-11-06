@@ -1,7 +1,7 @@
 {
   "name": "dsh-feiyu-say",
-  "version": "0.3.3",
-  "description": "本机 CosyVoice + RVC 合成语音，输出 WAV 并可在线试听；支持声线切换与一键部署。",
+  "version": "0.5.0",
+  "description": "阿里百炼 TTS（WebSocket）合成语音，输出 WAV 并可在线试听；不依赖本地模型。",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -12,9 +12,9 @@
     "dsh-plugin",
     "tts",
     "voice",
-    "cosyvoice",
-    "rvc",
-    "local"
+    "dashscope",
+    "bailian",
+    "qwen-tts"
   ],
   "main": "lib/host.js",
   "exports": {
@@ -35,7 +35,8 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@deepseek-ai/schemastery": "^3.18.1"
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "ws": "^8.18.0"
   },
   "dsh": {
     "bundle": {

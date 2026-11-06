@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.5.0（2026-11-06）
+
+**只保留阿里百炼，本地模型相关逻辑全部删除。**
+
+### 删除
+
+- 本机 CosyVoice 引擎、`cosy_say.py`、`cosy_requirements.txt`、所有 `cosy*` 配置项。
+- RVC 换声、`rvc_infer.py`、`rvcPython` / `rvc目录` / `模型目录` / `声线` / `当前声线`。
+- 一键部署（`deploy.mjs`、`/feiyu-say/deploy`、`/feiyu-say/voices`）以及相关设置页 UI。
+- `voice_switch` / `voice_download` 两个工具（没有本地声线了）。
+
+### 保留 / 简化
+
+- `send_voice` / `voice_list` / `voice_status` 三个工具，全部走百炼。
+- 设置页只剩：API Key / 模型 / 音色 / 地址 / 试听 / 语音提示 / 输出设置。
+- 合成链路：百炼 WebSocket → mp3 → ffmpeg 目标采样率单声道 → 落盘；RVC 这步彻底没有了。
+- 旧配置里的本地路径字段读不进来，下次保存即清掉；四个旋钮仍在插件 Config。
+- 未配 Key 时也支持环境变量 `DASHSCOPE_API_KEY`。
+
+## 0.4.0（2026-11-06）
+
+### 阿里百炼引擎（新增，可选）
+
+- 设置页顶部新增「引擎」：`本机 CosyVoice` / `阿里百炼`，默认仍是本机，不动现有链路。
+- 百炼走官方 WebSocket 协议（`run-task` → `continue-task` + `finish-task` → 二进制音频帧），纯 Node，不依赖 Python / DashScope SDK。
+- 四个参数全部可填：`百炼ApiKey` / `百炼模型`（默认 `qwen-audio-3.1-tts-flash`）/ `百炼音色`（默认 `longanhuan_v3.1`）/ `百炼地址`（默认公共 wss，可换成业务空间域名）。
+- 百炼分支：合成 mp3 → ffmpeg 转目标采样率单声道 → 落盘；**不走 RVC**，`voice_switch` / `voice_download` 会明确提示改用「百炼音色」。
+- `voice_status` / 设置页「运行自检」在百炼引擎下检查 Key、地址、模型、音色、ffmpeg；`test: true` 才真合成。
+- 配置文件写盘改为 `0600`（里面有 API Key）。
+
+### 修复
+
+- `hostdeps.mjs` 按 `package.json` 的 `exports/main` 找 schemastery 入口（原来只找 `lib/index.mjs`，实际是 `lib/index.cjs`，导致 `link:` 安装时 `Config` 恒为 `undefined`）。
+
 ## 0.3.0（2026-11-05）
 
 首版按生产要求重做，全部实测跑通（Torch 2.3.1 + CosyVoice2-0.5B zero-shot + RVC zyyv2）。
