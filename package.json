@@ -1,6 +1,6 @@
 {
   "name": "dsh-feiyu-say",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "阿里百炼 TTS（WebSocket）合成语音，输出 WAV 并可在线试听；不依赖本地模型。",
   "license": "MIT",
   "type": "module",
