@@ -1,6 +1,10 @@
 # dsh-feiyu-say
 
 [![npm](https://img.shields.io/npm/v/dsh-feiyu-say)](https://www.npmjs.com/package/dsh-feiyu-say)
+[![license](https://img.shields.io/npm/l/dsh-feiyu-say)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%E2%89%A522-informational)](https://nodejs.org/)
+
+[![npm](https://img.shields.io/npm/v/dsh-feiyu-say)](https://www.npmjs.com/package/dsh-feiyu-say)
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「**合成语音**」的插件。
 
@@ -111,3 +115,9 @@ run-task（model / voice / format / sample_rate）
 ## License
 
 MIT
+
+## 反馈
+
+- 装不上 / 用不对：先看上面的「排错」和「已知边界」；
+- 还是不行就开 [issue](https://github.com/Vansnc/dsh-feiyu-say/issues)，按模板把版本和日志带上；
+- 想改代码看 [CONTRIBUTING.md](./CONTRIBUTING.md)。
