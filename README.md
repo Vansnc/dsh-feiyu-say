@@ -4,8 +4,7 @@
 [![license](https://img.shields.io/npm/l/dsh-feiyu-say)](./LICENSE)
 [![node](https://img.shields.io/badge/node-%E2%89%A522-informational)](https://nodejs.org/)
 
-
-给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「**合成语音**」的插件。
+让你的大肥鱼发出声音
 
 调 **阿里百炼** 的 TTS WebSocket 接口，把一句话合成成 WAV，可在设置页试听。**不绑定任何 IM**——怎么发出去（QQ / 微信 / 就放着）由当前会话的传输方式决定。
 
