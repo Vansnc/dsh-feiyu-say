@@ -4,7 +4,6 @@
 [![license](https://img.shields.io/npm/l/dsh-feiyu-say)](./LICENSE)
 [![node](https://img.shields.io/badge/node-%E2%89%A522-informational)](https://nodejs.org/)
 
-[![npm](https://img.shields.io/npm/v/dsh-feiyu-say)](https://www.npmjs.com/package/dsh-feiyu-say)
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 一个「**合成语音**」的插件。
 
